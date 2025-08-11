@@ -418,6 +418,7 @@ function filterAlumni() {
     const cityFilter = $('#citySelect').val();
     const jobStatusFilter = $('#jobStatusSelect').val();
     const jobFilter = $('#jobSelect').val();
+    const genderFilter = document.querySelector('input[name="genderFilter"]:checked')?.value;
 
     const filteredData = alumniData.filter(alumni => {
         return (!nameFilter || alumni.name.toLowerCase().includes(nameFilter)) &&
@@ -426,7 +427,8 @@ function filterAlumni() {
             (!provinceFilter || alumni.province === provinceFilter) &&
             (!cityFilter || alumni.city === cityFilter) &&
             (!jobStatusFilter || alumni.job_status === jobStatusFilter) &&
-            (!jobFilter || alumni.job === jobFilter);
+            (!jobFilter || alumni.job === jobFilter) &&
+            (!genderFilter || alumni.gender === genderFilter);
     });
 
     renderTable(filteredData);
@@ -523,12 +525,13 @@ function updateMap(filteredData) {
     // Store current filtered data for use in getAlumniCount
     window.currentFilteredData = filteredData;
 
-    // Get currently active layer
-    const activeLayer = document.querySelector('input[type="checkbox"]:checked');
-    if (activeLayer) {
-        // Trigger change event to update the active layer with new data
-        const event = new Event('change');
-        activeLayer.dispatchEvent(event);
+    // Re-trigger active category or area layer so counts update
+    const activeCategory = document.querySelector('.category-checkbox:checked');
+    const activeArea = document.querySelector('input[name="areaLayer"]:checked');
+    if (activeCategory) {
+        activeCategory.dispatchEvent(new Event('change'));
+    } else if (activeArea) {
+        activeArea.dispatchEvent(new Event('change'));
     }
 
     // Update markers
@@ -736,7 +739,7 @@ L.Control.LayerControl = L.Control.extend({
         L.DomEvent.disableClickPropagation(container);
         L.DomEvent.disableScrollPropagation(container);
 
-        // Box 1: Area Selection
+        // Box 1: Area
         const areaBox = L.DomUtil.create('div', '', content);
         areaBox.style.marginBottom = '15px';
         areaBox.style.paddingBottom = '10px';
@@ -831,7 +834,51 @@ L.Control.LayerControl = L.Control.extend({
             });
         });
 
-        // Box 2: Data Categories
+        // Box 2: Jenis Kelamin
+        const genderBox = L.DomUtil.create('div', '', content);
+        genderBox.style.marginBottom = '15px';
+        genderBox.style.paddingBottom = '10px';
+        genderBox.style.borderBottom = '1px solid #eee';
+
+        const genderTitle = L.DomUtil.create('div', '', genderBox);
+        genderTitle.innerHTML = '<strong>Jenis Kelamin</strong>';
+        genderTitle.style.marginBottom = '8px';
+
+        const genderOptions = [
+            { name: 'Laki-laki', value: 'Laki-laki' },
+            { name: 'Perempuan', value: 'Perempuan' }
+        ];
+
+        genderOptions.forEach(option => {
+            const div = L.DomUtil.create('div', '', genderBox);
+            div.style.marginBottom = '5px';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+
+            const checkbox = L.DomUtil.create('input', '', div);
+            checkbox.type = 'checkbox';
+            checkbox.name = 'genderFilter';
+            checkbox.value = option.value;
+            checkbox.className = 'gender-checkbox';
+            checkbox.style.marginRight = '5px';
+
+            const label = L.DomUtil.create('label', '', div);
+            label.innerHTML = option.name;
+            label.style.marginLeft = '5px';
+            label.style.fontSize = '12px';
+
+            L.DomEvent.on(checkbox, 'change', function (e) {
+                if (e.target.checked) {
+                    const allCheckboxes = genderBox.querySelectorAll('.gender-checkbox');
+                    allCheckboxes.forEach(cb => {
+                        if (cb !== checkbox) cb.checked = false;
+                    });
+                }
+                filterAlumni();
+            });
+        });
+
+        // Box 3: Data Categories
         const categoryBox = L.DomUtil.create('div', '', content);
         const categoryTitle = L.DomUtil.create('div', '', categoryBox);
         categoryTitle.innerHTML = '<strong>Kategori Data</strong>';
@@ -2312,6 +2359,11 @@ function resetFilters() {
             '#yearSelect', '#jobSelect', '#jobStatusSelect'].forEach(selector => {
                 $(selector).val(null).trigger('change');
             });
+
+        // Reset gender filter
+        document.querySelectorAll('input[name="genderFilter"]').forEach(cb => {
+            cb.checked = false;
+        });
 
         // Close filter popup
         document.getElementById("filterPopup").style.display = "none";

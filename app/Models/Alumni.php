@@ -20,6 +20,7 @@ class Alumni extends Model
         'user_nim',
         'alamat',
         'no_telepon',
+        'jenis_kelamin',
         'deskripsi_diri',
         'keahlian',
         'instagram',

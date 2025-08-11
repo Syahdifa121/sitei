@@ -1240,9 +1240,10 @@ class MahasiswaController extends Controller
             // Buat request baru dengan data yang sudah difilter
             $filteredRequest = new Request($requestData);
             $filteredRequest->setMethod($request->getMethod());
-            
+
             $validated = $filteredRequest->validate([
                 'nama' => 'nullable|string|max:255',
+                'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
                 'email' => 'nullable|email|max:255',
                 'no_telepon' => 'nullable|numeric|digits_between:10,15',
                 'linkedin' => 'nullable|url|max:255',
@@ -1289,6 +1290,7 @@ class MahasiswaController extends Controller
             ], [
                 'nama.string' => 'Nama lengkap harus berupa teks.',
                 'nama.max' => 'Nama lengkap maksimal 255 karakter.',
+                'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan.',
                 'email.email' => 'Format email tidak valid.',
                 'email.max' => 'Email maksimal 255 karakter.',
                 'no_telepon.numeric' => 'Nomor telepon harus berupa angka.',
@@ -1446,7 +1448,14 @@ class MahasiswaController extends Controller
             $profil->organisasi = !empty($organisasiData) ? json_encode($organisasiData) : null;
 
             $profil->save();
-            
+
+            // Update jenis kelamin pada tabel alumni jika data alumni tersedia
+            $alumni = Alumni::where('user_nim', $user->nim)->first();
+            if ($alumni) {
+                $alumni->jenis_kelamin = $validated['jenis_kelamin'] ?? $alumni->jenis_kelamin;
+                $alumni->save();
+            }
+
             return back()->with('success', 'Berhasil menyimpan profil.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {

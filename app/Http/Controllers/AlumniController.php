@@ -69,6 +69,7 @@ class AlumniController extends Controller
                 'company_type' => $item->jenis_perusahaan,
                 'email' => $item->mahasiswa->email ?? $item->email,
                 'no_hp' => $item->no_telepon,
+                'gender' => $item->jenis_kelamin,
                 'linkedin' => $item->linkedin,
                 'tentangSaya' => $item->deskripsi_diri,
                 'keahlian' => $keahlian,
