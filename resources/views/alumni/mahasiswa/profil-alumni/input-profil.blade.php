@@ -9,21 +9,35 @@
         <div class="card-body p-4">
             <div id="profil-form">
 
-                <div class="row flex-column-reverse flex-md-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="nama" class="form-label fw-bold">Nama Lengkap</label>
-                        <input type="text" class="form-control rounded-3 @error('nama') is-invalid @enderror"
-                            id="nama" name="nama" value="{{ old('nama', $profil->nama ?? $user->nama) }}">
-                        @error('nama')
-                            <span class="text-danger" style="font-size: 11px">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
+                  <div class="row flex-column-reverse flex-md-row">
+                      <div class="col-md-12 mb-3">
+                          <label for="nama" class="form-label fw-bold">Nama Lengkap</label>
+                          <input type="text" class="form-control rounded-3 @error('nama') is-invalid @enderror"
+                              id="nama" name="nama" value="{{ old('nama', $profil->nama ?? $user->nama) }}">
+                          @error('nama')
+                              <span class="text-danger" style="font-size: 11px">{{ $message }}</span>
+                          @enderror
+                      </div>
+                  </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label fw-bold">Email</label>
-                        <input type="text" class="form-control rounded-3 @error('email') is-invalid @enderror"
+                  <div class="row">
+                      <div class="col-md-12 mb-3">
+                          <label for="jenis_kelamin" class="form-label fw-bold">Jenis Kelamin</label>
+                          <select class="form-control rounded-3 @error('jenis_kelamin') is-invalid @enderror" id="jenis_kelamin" name="jenis_kelamin">
+                              <option value="">Pilih Jenis Kelamin</option>
+                              <option value="Laki-laki" {{ old('jenis_kelamin', $alumni->jenis_kelamin ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                              <option value="Perempuan" {{ old('jenis_kelamin', $alumni->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                          </select>
+                          @error('jenis_kelamin')
+                              <span class="text-danger" style="font-size: 11px">{{ $message }}</span>
+                          @enderror
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6 mb-3">
+                          <label for="email" class="form-label fw-bold">Email</label>
+                          <input type="text" class="form-control rounded-3 @error('email') is-invalid @enderror"
                             id="email" name="email" value="{{ old('email', $profil->email ?? $user->email) }}">
                         @error('email')
                             <span class="text-danger" style="font-size: 11px">{{ $message }}</span>

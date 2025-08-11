@@ -50,17 +50,17 @@
                                         <option value="Mencari Kerja">Mencari Kerja</option>
                                     </select>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Pekerjaan</label>
-                                    <select id="jobSelect" class="form-select">
-                                        <option value="">Pilih Pekerjaan</option>
-                                    </select>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-gradient flex-grow-1" id="filterButton2">
-                                        Filter
-                                    </button>
-                                    <button type="button" class="btn btn-secondary flex-grow-1" id="resetButton">
+                                  <div class="mb-3">
+                                      <label class="form-label">Pekerjaan</label>
+                                      <select id="jobSelect" class="form-select">
+                                          <option value="">Pilih Pekerjaan</option>
+                                      </select>
+                                  </div>
+                                  <div class="d-flex gap-2">
+                                      <button type="button" class="btn btn-gradient flex-grow-1" id="filterButton2">
+                                          Filter
+                                      </button>
+                                      <button type="button" class="btn btn-secondary flex-grow-1" id="resetButton">
                                         Reset
                                     </button>
                                 </div>
